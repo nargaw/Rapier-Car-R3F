@@ -64,6 +64,8 @@ export default function Test()
     //     // body1.current.setNextKinematicPosition([0, 1, 0])
     // })
 
+    
+
     const HangingThing = (props) => {
         /**
          * Joints can be created between two RigidBodies
@@ -73,8 +75,13 @@ export default function Test()
       
         useSphericalJoint(anchor, box, [
           [0, 0, 0],
-          [0, 2, 0]
+          [0, 4, 0]
         ]);
+
+        const applyForce = () => {
+            console.log('clicked')
+            box.current.applyImpulse({x: -5, y: 0, z: 0})
+        }
       
         return (
           <group {...props}>
@@ -82,14 +89,14 @@ export default function Test()
              * We can use an empty RigidBody is created to act
              * as a non-moving anchor
              */}
-            <RigidBody ref={anchor} />
-            <RigidBody ref={box} position={[0, -2, 0]}>
-              <mesh>
+            <RigidBody ref={anchor} friction={0.01} restitution={1}/>
+            <RigidBody ref={box} position={[0, 0, 0]} friction={0.01} restitution={1}>
+              {/* <mesh>
                 <boxGeometry args={[0.2, 4, 0.2]} />
                 <meshBasicMaterial color={props.color} />
-              </mesh>
+              </mesh> */}
               <MeshCollider type="ball">
-                <mesh position={[0, -2, 0]}>
+                <mesh position={[0, 0, 0]} onClick={applyForce}>
                     <sphereGeometry args={[0.5]} />
                     <meshBasicMaterial color={props.color} />
                 </mesh>
