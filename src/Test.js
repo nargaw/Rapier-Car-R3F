@@ -84,7 +84,7 @@ export default function Test()
         }
       
         return (
-          <group {...props}>
+          <group {...props} >
             {/**
              * We can use an empty RigidBody is created to act
              * as a non-moving anchor
@@ -96,9 +96,9 @@ export default function Test()
                 <meshBasicMaterial color={props.color} />
               </mesh> */}
               <MeshCollider type="ball">
-                <mesh position={[0, 0, 0]} onClick={applyForce}>
+                <mesh position={[0, 0, 0]} onClick={applyForce} castShadow>
                     <sphereGeometry args={[0.5]} />
-                    <meshBasicMaterial color={props.color} />
+                    <meshStandardMaterial color={props.color} />
                 </mesh>
               </MeshCollider>
             </RigidBody>
@@ -108,12 +108,12 @@ export default function Test()
 
     return <>
         {/* {JointedThing()} */}
-        <HangingThing position={[-2, 8, 0]} color={"purple"}/>
-        <HangingThing position={[-1, 8, 0]} color={"green"} />
-        <HangingThing position={[0, 8, 0]} color={"lightblue"} />
-        <HangingThing position={[1, 8, 0]} color={"orange"} />
-        <HangingThing position={[2, 8, 0]} color={"limegreen"} />
-        <RigidBody
+        <HangingThing position={[-2, 5, 0]} color={"purple"}/>
+        <HangingThing position={[-1, 5, 0]} color={"green"} />
+        <HangingThing position={[0, 5, 0]} color={"lightblue"} />
+        <HangingThing position={[1, 5, 0]} color={"orange"} />
+        <HangingThing position={[2, 5, 0]} color={"limegreen"} />
+        {/* <RigidBody
             type="fixed"
             // density={0.1}
             
@@ -125,7 +125,7 @@ export default function Test()
                 <boxGeometry args={[15, 15, 0.5]}/>
                 <meshBasicMaterial color={0xff0000} />
             </mesh>
-        </RigidBody>
+        </RigidBody> */}
         
         
         {/* 
