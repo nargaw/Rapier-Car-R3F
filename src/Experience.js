@@ -3,6 +3,7 @@ import { Physics, Debug } from "@react-three/rapier"
 import Test from './Test.js'
 import Environment from './Environment.js'
 import Lights from './Lights.js'
+import Revolute from "./Revolute.js"
 
 export default function Experience()
 {
@@ -10,7 +11,8 @@ export default function Experience()
         <OrbitControls makeDefault />
         <Physics>
             <Debug />
-            <Test />
+            <Revolute />
+            {/* <Test /> */}
             <Environment />
             <Lights />
         </Physics>
