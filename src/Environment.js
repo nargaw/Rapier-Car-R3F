@@ -11,7 +11,7 @@ export default function Environment()
                 receiveShadow
                 rotation-x = {-Math.PI * 0.5}
             >
-                <boxGeometry args={[15, 15, 0.5]}/>
+                <boxGeometry args={[150, 150, 0.5]}/>
                 <meshStandardMaterial color={0xff0000} />
             </mesh>
         </RigidBody>
