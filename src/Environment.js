@@ -5,6 +5,8 @@ export default function Environment()
     return <>
         <RigidBody
             type="fixed"
+            friction={1}
+            restitution={0.1}
             // density={0.1}    
         >   
             <mesh

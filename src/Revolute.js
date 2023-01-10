@@ -15,6 +15,8 @@ export default function Revolute()
     const body1 = useRef()
     const body2 = useRef()
     const body3 = useRef()
+    const body4 = useRef()
+    const body5 = useRef()
 
     const sphereGeometry = new THREE.SphereGeometry(1, 32, 32)
 
@@ -26,7 +28,7 @@ export default function Revolute()
         body2,
         [
             [0, 0, 0],
-            [2, 0, 0],
+            [3, -1, -2],
             [2, 0, 0],
         ], 
     )
@@ -36,7 +38,27 @@ export default function Revolute()
         body2,
         [
             [0, 0, 0],
-            [-2, 0, 0],
+            [-3, -1, 3],
+            [2, 0, 0],
+        ]
+    )
+
+    useRevoluteJoint(
+        body4,
+        body2,
+        [
+            [0, 0, 0],
+            [-3, -1, -2],
+            [2, 0, 0],
+        ]
+    )
+
+    useRevoluteJoint(
+        body5,
+        body2,
+        [
+            [0, 0, 0],
+            [3, -1, 3],
             [2, 0, 0],
         ]
     )
@@ -65,8 +87,8 @@ export default function Revolute()
         const impulse = { x:0, y: 0, z:0}
         const torque = {x:0, y:0, z:0}
 
-        const impulseStrength = 0.6 * delta
-        const torqueStrength = 0.2 * delta
+        const impulseStrength = 10 * delta
+        const torqueStrength = 10 * delta
 
         if(forward)
         {
@@ -101,6 +123,12 @@ export default function Revolute()
 
         body3.current.applyImpulse(impulse)
         body3.current.applyTorqueImpulse(torque)
+
+        body4.current.applyImpulse(impulse)
+        body4.current.applyTorqueImpulse(torque)
+
+        body5.current.applyImpulse(impulse)
+        body5.current.applyTorqueImpulse(torque)
     })
 
     const push = () => 
@@ -115,8 +143,8 @@ export default function Revolute()
             ref={body1}
             position={[0, 6, 0]}
             // gravityScale={0.25}
-            friction={0.1}
-            restitution={0.8}
+            friction={1}
+            restitution={0.2}
             type="kinematic"
             colliders="ball"
         >
@@ -134,10 +162,11 @@ export default function Revolute()
             // gravityScale={0.25}
             friction={0.4}
             restitution={0.8}
-            type="dynamic"
+            // angularDamping={0.1}
+            type="kinematic"
         >
             <mesh onClick={push} castShadow>
-                <boxGeometry args={[1, 1, 1]}/>
+                <boxGeometry args={[3, 2, 6]}/>
                 <meshStandardMaterial color={0x00ff00} />
             </mesh>
         </RigidBody>
@@ -146,8 +175,8 @@ export default function Revolute()
             ref={body3}
             position={[0, 6, 0]}
             // gravityScale={0.25}
-            friction={0.1}
-            restitution={0.8}
+            friction={1}
+            restitution={0.2}
             type="kinematic"
             colliders="ball"
         >
@@ -156,6 +185,40 @@ export default function Revolute()
                 castShadow
             >
                 <meshStandardMaterial color={0x00ffff} />
+            </mesh>
+        </RigidBody>
+
+        <RigidBody
+            ref={body4}
+            position={[0, 6, 0]}
+            // gravityScale={0.25}
+            friction={1}
+            restitution={0.2}
+            type="kinematic"
+            colliders="ball"
+        >
+            <mesh
+                geometry={sphereGeometry}
+                castShadow
+            >
+                <meshStandardMaterial color={0xffff00} />
+            </mesh>
+        </RigidBody>
+
+        <RigidBody
+            ref={body5}
+            position={[0, 6, 0]}
+            // gravityScale={0.25}
+            friction={1}
+            restitution={0.2}
+            type="kinematic"
+            colliders="ball"
+        >
+            <mesh
+                geometry={sphereGeometry}
+                castShadow
+            >
+                <meshStandardMaterial color={0x0000ff} />
             </mesh>
         </RigidBody>
     </>
