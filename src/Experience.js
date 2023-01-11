@@ -13,7 +13,7 @@ export default function Experience()
         <Physics>
             <Debug />
             <Revolute />
-            <Buildings />
+            {/* <Buildings /> */}
             {/* <Test /> */}
             <Environment />
             <Lights />

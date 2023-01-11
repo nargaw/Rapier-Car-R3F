@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { useFrame } from "@react-three/fiber"
-import { useRevoluteJoint, RigidBody, useRapier } from "@react-three/rapier"
+import { useRevoluteJoint, RigidBody, useRapier, useFixedJoint } from "@react-three/rapier"
 import { useKeyboardControls } from "@react-three/drei"
 import * as THREE from "three"
 
@@ -12,11 +12,15 @@ export default function Revolute()
 
     const [ subscribeKeys, getKeys ] = useKeyboardControls()
 
-    const body1 = useRef()
-    const body2 = useRef()
-    const body3 = useRef()
-    const body4 = useRef()
-    const body5 = useRef()
+    const frontLeft = useRef()
+    const anchorfl = useRef()
+    const frontRight = useRef()
+    const anchorfr = useRef()
+    const backLeft = useRef()
+    const anchorbl = useRef()
+    const backRight = useRef()
+    const anchorbr = useRef()
+    const body = useRef()
 
     const sphereGeometry = new THREE.SphereGeometry(1, 32, 32)
 
@@ -24,48 +28,94 @@ export default function Revolute()
     const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
     
     useRevoluteJoint(
-        body1,
-        body2,
+        anchorfl,
+        frontLeft,
         [
             [0, 0, 0],
-            [3, -1, -2],
-            [2, 0, 0],
+            [-3, 2, -2],
+            [1, 0, 0],
         ], 
     )
 
     useRevoluteJoint(
-        body3,
-        body2,
+        anchorfr,
+        frontRight,
         [
             [0, 0, 0],
-            [-3, -1, 3],
-            [2, 0, 0],
+            [3, 2, -2],
+            [1, 0, 0],
         ]
     )
 
     useRevoluteJoint(
-        body4,
-        body2,
+        anchorbl,
+        backLeft,
         [
             [0, 0, 0],
-            [-3, -1, -2],
-            [2, 0, 0],
+            [-3, 2, -2],
+            [1, 0, 0],
         ]
     )
 
     useRevoluteJoint(
-        body5,
-        body2,
+        anchorbr,
+        backRight,
         [
             [0, 0, 0],
-            [3, -1, 3],
-            [2, 0, 0],
+            [-3, 2, 2],
+            [1, 0, 0],
         ]
     )
+
+    useFixedJoint(
+        anchorfl,
+        body,
+        [
+            [0, 0, 0],
+            [0, 0, 0, 1],
+            [3, 0, 2],
+            [0, 0, 0, 1],
+        ]
+    )
+
+    useFixedJoint(
+        anchorfr,
+        body,
+        [
+            [0, 0, 0],
+            [0, 0, 0, 1],
+            [3, 0, -2],
+            [0, 0, 0, 1],
+        ]
+    )
+
+    useFixedJoint(
+        anchorbl,
+        body,
+        [
+            [0, 0, 0],
+            [0, 0, 0, 1],
+            [-3, 0, 2],
+            [0, 0, 0, 1],
+        ]
+    )
+
+    useFixedJoint(
+        anchorbr,
+        body,
+        [
+            [0, 0, 0],
+            [0, 0, 0, 1],
+            [3, 0, 2],
+            [0, 0, 0, 1],
+        ]
+    )
+
+
 
     useFrame((state, delta) => 
     {
-        const bodyPosition = body2.current.translation()
+        const bodyPosition = body.current.translation()
         // console.log(bodyPosition)
         const cameraPosition = new THREE.Vector3()
         cameraPosition.copy(bodyPosition)
@@ -79,8 +129,8 @@ export default function Revolute()
         smoothedCameraPosition.lerp(cameraPosition, 5 * delta)
         smoothedCameraTarget.lerp(cameraTarget, 5 * delta)
 
-        state.camera.position.copy(smoothedCameraPosition)
-        state.camera.lookAt(smoothedCameraTarget)
+        // state.camera.position.copy(smoothedCameraPosition)
+        // state.camera.lookAt(smoothedCameraTarget)
 
         //controls
         const { forward, backward, left, right} = getKeys()
@@ -118,29 +168,42 @@ export default function Revolute()
             console.log('right')
         }
 
-        body1.current.applyImpulse(impulse)
-        body1.current.applyTorqueImpulse(torque)
+        // body1.current.applyImpulse(impulse)
+        // body1.current.applyTorqueImpulse(torque)
 
-        body3.current.applyImpulse(impulse)
-        body3.current.applyTorqueImpulse(torque)
+        // body3.current.applyImpulse(impulse)
+        // body3.current.applyTorqueImpulse(torque)
 
-        body4.current.applyImpulse(impulse)
-        body4.current.applyTorqueImpulse(torque)
+        // body4.current.applyImpulse(impulse)
+        // body4.current.applyTorqueImpulse(torque)
 
-        body5.current.applyImpulse(impulse)
-        body5.current.applyTorqueImpulse(torque)
+        // body5.current.applyImpulse(impulse)
+        // body5.current.applyTorqueImpulse(torque)
+
+        // body2.current.applyImpulse(impulse)
+        // body2.current.applyTorqueImpulse(torque)
     })
 
-    const push = () => 
-    {
-        body1.current.addTorque({x: 0, y: 0, z: 2}, true)
-        body3.current.addTorque({x: 0, y: 0, z: 2}, true)
-        console.log('clicked')
-    }
+    return <>
 
-    return <>       
         <RigidBody
-            ref={body1}
+            ref={body}
+            position={[0, 6, 0]}
+            // gravityScale={0.25}
+            friction={0.4}
+            restitution={0.8}
+            // angularDamping={0.1}
+            type="fixed"
+        >
+            <mesh castShadow>
+                <boxGeometry args={[3, 2, 6]}/>
+                <meshStandardMaterial color={0x00ff00} />
+            </mesh>
+        </RigidBody>
+
+        <RigidBody ref={anchorfl} friction={0.01} restitution={1}/>
+        <RigidBody
+            ref={frontLeft}
             position={[0, 6, 0]}
             // gravityScale={0.25}
             friction={1}
@@ -156,23 +219,9 @@ export default function Revolute()
             </mesh>
         </RigidBody>
 
+        <RigidBody ref={anchorfr} friction={0.01} restitution={1}/>
         <RigidBody
-            ref={body2}
-            position={[0, 6, 0]}
-            // gravityScale={0.25}
-            friction={0.4}
-            restitution={0.8}
-            // angularDamping={0.1}
-            type="kinematic"
-        >
-            <mesh onClick={push} castShadow>
-                <boxGeometry args={[3, 2, 6]}/>
-                <meshStandardMaterial color={0x00ff00} />
-            </mesh>
-        </RigidBody>
-
-        <RigidBody
-            ref={body3}
+            ref={frontRight}
             position={[0, 6, 0]}
             // gravityScale={0.25}
             friction={1}
@@ -188,8 +237,9 @@ export default function Revolute()
             </mesh>
         </RigidBody>
 
+        <RigidBody ref={anchorbl} friction={0.01} restitution={1}/>
         <RigidBody
-            ref={body4}
+            ref={backLeft}
             position={[0, 6, 0]}
             // gravityScale={0.25}
             friction={1}
@@ -205,8 +255,9 @@ export default function Revolute()
             </mesh>
         </RigidBody>
 
+        <RigidBody ref={anchorbr} friction={0.01} restitution={1}/>
         <RigidBody
-            ref={body5}
+            ref={backRight}
             position={[0, 6, 0]}
             // gravityScale={0.25}
             friction={1}
