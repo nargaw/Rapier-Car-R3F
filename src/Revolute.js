@@ -92,29 +92,29 @@ export default function Revolute()
 
         if(forward)
         {
-            impulse.z -= impulseStrength
+            // impulse.z -= impulseStrength
             torque.x -= torqueStrength
             console.log('forward')
         }
 
         if(backward)
         {
-            impulse.z += impulseStrength
+            // impulse.z += impulseStrength
             torque.x += torqueStrength
             console.log('backward')
         }
 
         if(left)
         {
-            impulse.x -= impulseStrength
-            torque.z += torqueStrength
+            // impulse.x -= impulseStrength
+            torque.x += torqueStrength
             console.log('left')
         }
 
         if(right)
         {
-            impulse.x += impulseStrength
-            torque.z -= torqueStrength
+            // impulse.x += impulseStrength
+            torque.x -= torqueStrength
             console.log('right')
         }
 
@@ -218,7 +218,7 @@ export default function Revolute()
                 geometry={sphereGeometry}
                 castShadow
             >
-                <meshStandardMaterial color={0x0000ff} />
+                <meshStandardMaterial color={0x00ffff} />
             </mesh>
         </RigidBody>
     </>

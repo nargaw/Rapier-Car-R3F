@@ -24,7 +24,7 @@ root.render(
             camera={{
                 fov: 50,
                 near: 0.1,
-                far: 250,
+                far: 2500,
                 position: [0, 5, 25]
             }}
         >
