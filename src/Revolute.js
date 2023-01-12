@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { useFrame } from "@react-three/fiber"
-import { useRevoluteJoint, RigidBody, useRapier, useFixedJoint } from "@react-three/rapier"
+import { useRevoluteJoint, RigidBody, useRapier, useFixedJoint, useSphericalJoint, usePrismaticJoint } from "@react-three/rapier"
 import { useKeyboardControls } from "@react-three/drei"
 import * as THREE from "three"
 
@@ -27,89 +27,100 @@ export default function Revolute()
     const [ smoothedCameraPosition ] = useState(() => new THREE.Vector3(10, 10, 10))
     const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
     
-    useRevoluteJoint(
-        anchorfl,
+    // useRevoluteJoint(
+    //     frontLeft,
+    //     anchorfl,
+    //     [
+    //         [0, 0, 0],
+    //         [0, 0, 0],
+    //         [1, 0, 0],
+    //     ], 
+    // )
+
+    usePrismaticJoint(
         frontLeft,
+        anchorfl,
         [
-            [0, 0, 0],
-            [-3, 2, -2],
-            [1, 0, 0],
-        ], 
-    )
-
-    useRevoluteJoint(
-        anchorfr,
-        frontRight,
-        [
-            [0, 0, 0],
-            [3, 2, -2],
-            [1, 0, 0],
+            [0, 0, 0], // Position of the joint in bodyA's local space    
+            [0, 0, 0], // Position of the joint in bodyB's local space
+            [1, 0, 0], // Axis of the joint, expressed in the local-space of the rigid-bodies it is attached to.
         ]
     )
 
-    useRevoluteJoint(
-        anchorbl,
-        backLeft,
-        [
-            [0, 0, 0],
-            [-3, 2, -2],
-            [1, 0, 0],
-        ]
-    )
+    // useRevoluteJoint(
+    //     anchorfr,
+    //     frontRight,
+    //     [
+    //         [3, 0, -2],
+    //         [0, 0, 0],
+    //         [1, 0, 0],
+    //     ]
+    // )
 
-    useRevoluteJoint(
-        anchorbr,
-        backRight,
-        [
-            [0, 0, 0],
-            [-3, 2, 2],
-            [1, 0, 0],
-        ]
-    )
+    // useRevoluteJoint(
+    //     anchorbl,
+    //     backLeft,
+    //     [
+    //         [-3, 0, 2],
+    //         [0, 0, 0],
+    //         [1, 0, 0],
+    //     ]
+    // )
 
-    useFixedJoint(
+    // useRevoluteJoint(
+    //     anchorbr,
+    //     backRight,
+    //     [
+    //         [3, 0, 2],
+    //         [0, 0, 0],
+    //         [1, 0, 0],
+    //     ]
+    // )
+
+    const jointfl = useFixedJoint(
         anchorfl,
         body,
         [
-            [0, 0, 0],
+            [-3, 10, -2],
             [0, 0, 0, 1],
-            [3, 0, 2],
+            [-3, 0, -2],
             [0, 0, 0, 1],
         ]
     )
+    console.log(jointfl)
 
-    useFixedJoint(
-        anchorfr,
-        body,
-        [
-            [0, 0, 0],
-            [0, 0, 0, 1],
-            [3, 0, -2],
-            [0, 0, 0, 1],
-        ]
-    )
+    // useFixedJoint(
+    //     anchorfr,
+    //     body,
+    //     [
+    //         [0, 0, 0],
+    //         [0, 0, 0, 1],
+    //         [3, 0, -2],
+    //         [0, 0, 0, 1],
+    //     ]
+    // )
 
-    useFixedJoint(
-        anchorbl,
-        body,
-        [
-            [0, 0, 0],
-            [0, 0, 0, 1],
-            [-3, 0, 2],
-            [0, 0, 0, 1],
-        ]
-    )
+    // useFixedJoint(
+    //     anchorbl,
+    //     body,
+    //     [
+    //         [0, 0, 0],
+    //         [0, 0, 0, 1],
+    //         [-3, 0, 2],
+    //         [0, 0, 0, 1],
+    //     ]
+    // )
 
-    useFixedJoint(
-        anchorbr,
-        body,
-        [
-            [0, 0, 0],
-            [0, 0, 0, 1],
-            [3, 0, 2],
-            [0, 0, 0, 1],
-        ]
-    )
+    // useFixedJoint(
+    //     anchorbr,
+    //     body,
+    //     [
+    //         [0, 0, 0],
+    //         [0, 0, 0, 1],
+    //         [3, 0, 2],
+    //         [0, 0, 0, 1],
+    //     ]
+    // )
 
 
 
@@ -188,7 +199,7 @@ export default function Revolute()
 
         <RigidBody
             ref={body}
-            position={[0, 6, 0]}
+            position={[0, 10, 0]}
             // gravityScale={0.25}
             friction={0.4}
             restitution={0.8}
@@ -201,28 +212,31 @@ export default function Revolute()
             </mesh>
         </RigidBody>
 
-        <RigidBody ref={anchorfl} friction={0.01} restitution={1}/>
-        <RigidBody
-            ref={frontLeft}
-            position={[0, 6, 0]}
-            // gravityScale={0.25}
-            friction={1}
-            restitution={0.2}
-            type="kinematic"
-            colliders="ball"
-        >
-            <mesh
-                geometry={sphereGeometry}
-                castShadow
+        <group>
+            <RigidBody ref={anchorfl} friction={0.01} restitution={1}/>
+            <RigidBody
+                ref={frontLeft}
+                position={[-3, 10, -2]}
+                // gravityScale={0.25}
+                friction={1}
+                restitution={0.2}
+                type="fixed"
+                colliders="ball"
             >
-                <meshStandardMaterial color={0xffff00} />
-            </mesh>
-        </RigidBody>
+                <mesh
+                    geometry={sphereGeometry}
+                    castShadow
+                >
+                    <meshStandardMaterial color={0xffff00} />
+                </mesh>
+            </RigidBody>  
+        </group>
+        
 
-        <RigidBody ref={anchorfr} friction={0.01} restitution={1}/>
+        {/* <RigidBody ref={anchorfr} friction={0.01} restitution={1}/>
         <RigidBody
             ref={frontRight}
-            position={[0, 6, 0]}
+            // position={[0, 0, 0]}
             // gravityScale={0.25}
             friction={1}
             restitution={0.2}
@@ -240,7 +254,7 @@ export default function Revolute()
         <RigidBody ref={anchorbl} friction={0.01} restitution={1}/>
         <RigidBody
             ref={backLeft}
-            position={[0, 6, 0]}
+            // position={[0, 0, 0]}
             // gravityScale={0.25}
             friction={1}
             restitution={0.2}
@@ -258,7 +272,7 @@ export default function Revolute()
         <RigidBody ref={anchorbr} friction={0.01} restitution={1}/>
         <RigidBody
             ref={backRight}
-            position={[0, 6, 0]}
+            // position={[0, 0, 0]}
             // gravityScale={0.25}
             friction={1}
             restitution={0.2}
@@ -271,6 +285,6 @@ export default function Revolute()
             >
                 <meshStandardMaterial color={0x00ffff} />
             </mesh>
-        </RigidBody>
+        </RigidBody> */}
     </>
 }
