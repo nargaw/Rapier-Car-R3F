@@ -22,6 +22,17 @@ export default function Spinner()
     })
 
     return <>
-    
+        <RigidBody 
+            ref={spinner}
+            position={[0, 10, 0]}
+            type="dynamic"
+            restitution={0.8}
+            friction={0.4}
+        >
+            <mesh>
+                <boxGeometry args={[8, 0.5, 0.5]} />
+                <meshBasicMaterial color="orange" />
+            </mesh>
+        </RigidBody>
     </>
 }
