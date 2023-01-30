@@ -5,6 +5,7 @@ import Environment from './Environment.js'
 import Lights from './Lights.js'
 import Revolute from "./Revolute.js"
 import Buildings from "./Buildings.js"
+import Spinner from './Spinner.js'
 
 export default function Experience()
 {
@@ -12,9 +13,10 @@ export default function Experience()
         <OrbitControls makeDefault />
         <Physics>
             <Debug />
-            <Revolute />
+            {/* <Revolute /> */}
             {/* <Buildings /> */}
             {/* <Test /> */}
+            <Spinner />
             <Environment />
             <Lights />
         </Physics>

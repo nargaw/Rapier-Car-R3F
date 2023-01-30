@@ -37,15 +37,23 @@ export default function Revolute()
     //     ], 
     // )
 
-    usePrismaticJoint(
+    useSphericalJoint(
+        anchorfl, 
         frontLeft,
-        anchorfl,
         [
-            [0, 0, 0], // Position of the joint in bodyA's local space    
-            [0, 0, 0], // Position of the joint in bodyB's local space
-            [1, 0, 0], // Axis of the joint, expressed in the local-space of the rigid-bodies it is attached to.
-        ]
-    )
+        [0, 0, 0],
+        [0, 0, 0]
+    ]);
+
+    // usePrismaticJoint(
+    //     frontLeft,
+    //     anchorfl,
+    //     [
+    //         [0, 0, 0], // Position of the joint in bodyA's local space    
+    //         [-3, 10, 0], // Position of the joint in bodyB's local space
+    //         [1, 0, 0], // Axis of the joint, expressed in the local-space of the rigid-bodies it is attached to.
+    //     ]
+    // )
 
     // useRevoluteJoint(
     //     anchorfr,
@@ -78,16 +86,16 @@ export default function Revolute()
     // )
 
     const jointfl = useFixedJoint(
-        anchorfl,
         body,
+        anchorfl,
         [
-            [-3, 10, -2],
-            [0, 0, 0, 1],
-            [-3, 0, -2],
-            [0, 0, 0, 1],
+            [-3, -1, -2], // Position of the joint in bodyA's local space
+            [0, 0, 0, 1], // Orientation of the joint in bodyA's local space
+            [0, 0, 0], // Position of the joint in bodyB's local space
+            [0, 2, 0, 1], // Orientation of the joint in bodyB's local space
         ]
     )
-    console.log(jointfl)
+    // console.log(jointfl)
 
     // useFixedJoint(
     //     anchorfr,
@@ -204,7 +212,7 @@ export default function Revolute()
             friction={0.4}
             restitution={0.8}
             // angularDamping={0.1}
-            type="fixed"
+            // type="fixed"
         >
             <mesh castShadow>
                 <boxGeometry args={[3, 2, 6]}/>
@@ -213,14 +221,20 @@ export default function Revolute()
         </RigidBody>
 
         <group>
-            <RigidBody ref={anchorfl} friction={0.01} restitution={1}/>
+            <RigidBody 
+                ref={anchorfl} 
+                friction={0.01} 
+                restitution={1}   
+                position={[0, 3, 0]} 
+                // type="kinematic"
+            />
             <RigidBody
                 ref={frontLeft}
-                position={[-3, 10, -2]}
+                // position={[-3, 10, -2]}
                 // gravityScale={0.25}
                 friction={1}
                 restitution={0.2}
-                type="fixed"
+                // type="kinematic"
                 colliders="ball"
             >
                 <mesh
